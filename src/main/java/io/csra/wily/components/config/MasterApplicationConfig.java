@@ -7,6 +7,9 @@ import java.util.Map;
 
 import javax.servlet.MultipartConfigElement;
 
+import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.smartystreets.api.ClientBuilder;
 import com.smartystreets.api.us_street.Client;
 import io.csra.wily.components.converter.BooleanStringConverter;
@@ -17,6 +20,8 @@ import org.dozer.CustomConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -85,6 +90,15 @@ public class MasterApplicationConfig implements WebMvcConfigurer {
 		}
 
 		return new ClientBuilder(authId, authToken).buildUsStreetApiClient();
+	}
+
+	@Bean
+	@ConditionalOnProperty(name="aws.s3.enabled", havingValue = "true")
+	public AmazonS3 amazonS3() {
+		return AmazonS3ClientBuilder.standard()
+				.withRegion(environment.getProperty("aws.s3.bucket.region"))
+				.withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
+				.build();
 	}
 
 	protected List<String> getMappingFiles() {

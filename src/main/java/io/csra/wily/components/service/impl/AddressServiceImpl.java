@@ -13,15 +13,13 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service("addressService")
 public class AddressServiceImpl implements AddressService {
 
     private static final int MEAN_RADIUS_OF_EARTH_IN_MILES = 3959;
-    private static final int HAVERSINE_COEFFICIENT1  = 2;
-    private static final int HAVERSINE_COEFFICIENT2  = 2;
+    private static final int HAVERSINE_COEFFICIENT = 2;
 
     @Autowired
     private Client smartyStreetsClient;
@@ -54,24 +52,21 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public double distanceBetween(CoordinatesDTO coordinates1, CoordinatesDTO coordinates2) {
-        /* Uses Haversine formula - Refer src/main/resources/haversine.pdf
-		   (Courtesy: http://en.wikipedia.org/wiki/Haversine_formula)
+        /* Uses Haversine formula - http://en.wikipedia.org/wiki/Haversine_formula
 		   Note: The Haversine formula does not take into account the non-spheroidal (ellipsoidal) shape of the Earth
-		   neither does it consider the walk path between 2 coordinates. For short distances its OK to use it.
-		   (http://en.wikipedia.org/wiki/Earth_radius)
-		   **We could encapsulate the algorithm using a Strategy, it might be an over kill for now.
+		   neither does it consider the walk path between 2 coordinates.
 		 */
 
         //for computation purposes we need to convert Degrees to Radians, (multiply with PI/180 OR use Math.toRadians)
         double diffLat = Math.toRadians(coordinates1.getLatitude() - coordinates2.getLatitude());
         double diffLon = Math.toRadians(coordinates1.getLongitude() - coordinates2.getLongitude());
 
-        double intermediateResult = Math.sin(diffLat / HAVERSINE_COEFFICIENT2) * Math.sin(diffLat / HAVERSINE_COEFFICIENT2) +
+        double intermediateResult = Math.sin(diffLat / HAVERSINE_COEFFICIENT) * Math.sin(diffLat / HAVERSINE_COEFFICIENT) +
                 Math.cos(Math.toRadians(coordinates1.getLatitude())) *
                         Math.cos(Math.toRadians(coordinates2.getLatitude())) *
-                        Math.sin(diffLon / HAVERSINE_COEFFICIENT2) * Math.sin(diffLon / HAVERSINE_COEFFICIENT2);
+                        Math.sin(diffLon / HAVERSINE_COEFFICIENT) * Math.sin(diffLon / HAVERSINE_COEFFICIENT);
 
-        return HAVERSINE_COEFFICIENT1 * MEAN_RADIUS_OF_EARTH_IN_MILES * Math.asin(Math.sqrt(intermediateResult));
+        return HAVERSINE_COEFFICIENT * MEAN_RADIUS_OF_EARTH_IN_MILES * Math.asin(Math.sqrt(intermediateResult));
     }
 
     private Lookup getLookupForInput(AddressInputDTO dto) {

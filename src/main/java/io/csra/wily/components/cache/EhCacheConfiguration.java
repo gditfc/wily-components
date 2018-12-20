@@ -29,7 +29,7 @@ public abstract class EhCacheConfiguration implements CachingConfigurer {
 	/**
 	 * Loops the provided cache configs and provides an instance of the EhCacheManager
 	 * 
-	 * @return
+	 * @return CacheManager
 	 */
 	@Bean(destroyMethod = "shutdown")
 	public net.sf.ehcache.CacheManager ehCacheManager() {
@@ -48,7 +48,7 @@ public abstract class EhCacheConfiguration implements CachingConfigurer {
 	 * 
 	 * Be sure to add @Configuration and @EnableCaching to your class in order to activate this cache.
 	 * 
-	 * @return
+	 * @return List of CacheConfiguration
 	 */
 	protected abstract List<CacheConfiguration> getCacheConfigurations();
 
@@ -59,7 +59,7 @@ public abstract class EhCacheConfiguration implements CachingConfigurer {
 	 * @param cacheName
 	 * @param evictionPolicy
 	 * @param maxEntries
-	 * @return
+	 * @return CacheConfiguration
 	 */
 	protected CacheConfiguration buildCacheCongfiguration(String cacheName, String evictionPolicy, int maxEntries, int hoursToLive) {
 		CacheConfiguration cacheConfiguration = new CacheConfiguration();
