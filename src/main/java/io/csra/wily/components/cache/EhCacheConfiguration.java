@@ -61,7 +61,7 @@ public abstract class EhCacheConfiguration implements CachingConfigurer {
 	 * @param maxEntries
 	 * @return CacheConfiguration
 	 */
-	protected CacheConfiguration buildCacheCongfiguration(String cacheName, String evictionPolicy, int maxEntries, int hoursToLive) {
+	protected CacheConfiguration buildCacheConfiguration(String cacheName, String evictionPolicy, int maxEntries, int hoursToLive) {
 		CacheConfiguration cacheConfiguration = new CacheConfiguration();
 		cacheConfiguration.setName(cacheName);
 		cacheConfiguration.setMemoryStoreEvictionPolicy(evictionPolicy);
@@ -69,6 +69,16 @@ public abstract class EhCacheConfiguration implements CachingConfigurer {
 		cacheConfiguration.setTimeToLiveSeconds(hoursToLive * 60 * 60);
 
 		return cacheConfiguration;
+	}
+
+	/**
+	 * Helper method to construct cache configuration using the default values.
+	 *
+	 * @param cacheName
+	 * @return
+	 */
+	protected CacheConfiguration buildCacheConfigurationWithDefaultValues(String cacheName) {
+		return buildCacheConfiguration(cacheName, DEFAULT_EVICTION_POLICY, DEFAULT_MAX_ENTRIES, DEFAULT_HOURS_TO_LIVE);
 	}
 
 	@Bean

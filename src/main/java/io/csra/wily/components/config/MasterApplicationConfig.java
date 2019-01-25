@@ -15,6 +15,8 @@ import com.smartystreets.api.us_street.Client;
 import io.csra.wily.components.converter.BooleanStringConverter;
 import io.csra.wily.components.converter.DozerMapperPlus;
 import io.csra.wily.components.interceptor.JsonHijackingInterceptor;
+import io.csra.wily.components.service.AmazonS3Service;
+import io.csra.wily.components.service.impl.AmazonS3ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.dozer.CustomConverter;
 import org.slf4j.Logger;
@@ -99,6 +101,12 @@ public class MasterApplicationConfig implements WebMvcConfigurer {
 				.withRegion(environment.getProperty("aws.s3.bucket.region"))
 				.withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
 				.build();
+	}
+
+	@Bean
+	@ConditionalOnProperty(name="aws.s3.enabled", havingValue = "true")
+	public AmazonS3Service amazonS3Service(Environment environment, AmazonS3 amazonS3) {
+		return new AmazonS3ServiceImpl(environment, amazonS3);
 	}
 
 	protected List<String> getMappingFiles() {

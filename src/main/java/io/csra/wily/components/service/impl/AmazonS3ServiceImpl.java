@@ -5,23 +5,23 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
 import com.google.common.io.ByteStreams;
 import io.csra.wily.components.service.AmazonS3Service;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-@Service
 public class AmazonS3ServiceImpl implements AmazonS3Service {
 
-    @Autowired
     private Environment environment;
 
-    @Autowired
     private AmazonS3 s3Client;
+
+    public AmazonS3ServiceImpl(Environment environment, AmazonS3 s3Client) {
+        this.environment = environment;
+        this.s3Client = s3Client;
+    }
 
     @Override
     public byte[] getDocumentFromS3(String documentKey) throws IOException {
