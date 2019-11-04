@@ -41,7 +41,7 @@ public class CacheControlFilter extends AbstractFilter {
 	private Environment environment;
 
 	@Override
-	protected void doFilterImpl(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+	protected void doFilterImpl(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) {
 		String cacheableUris = environment.getProperty(CACHEABLE_URIS_PROPERTY);
 
 		if (StringUtils.isNotBlank(cacheableUris)) {

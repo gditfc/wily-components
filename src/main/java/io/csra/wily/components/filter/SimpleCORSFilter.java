@@ -20,7 +20,6 @@ import org.springframework.stereotype.Component;
  *
  * @author ndimola
  */
-@Component
 public class SimpleCORSFilter extends AbstractFilter {
 
 	@Autowired
