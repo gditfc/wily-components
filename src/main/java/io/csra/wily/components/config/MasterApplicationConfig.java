@@ -1,9 +1,6 @@
 package io.csra.wily.components.config;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.MultipartConfigElement;
 
@@ -22,7 +19,6 @@ import org.dozer.CustomConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
 import org.springframework.context.annotation.Bean;
@@ -38,94 +34,91 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * This is a master configuration that makes it easy to get off the ground with a new application.
  * Rather than writing your own, you can merely extend this one to get the basic stuff you'll need to
  * do most standard stuff.
- *
+ * <p>
  * This includes stuff like Jackson and Dozer Mappers, as well as a MultipartConfigElement and a RestTemplate.
  * Your extended AppConfig can house anything else you need to run your app.
- *
  */
 public class MasterApplicationConfig implements WebMvcConfigurer {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(MasterApplicationConfig.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MasterApplicationConfig.class);
 
-	@Autowired
-	private JsonHijackingInterceptor jsonHijackingInterceptor;
+    @Autowired
+    private JsonHijackingInterceptor jsonHijackingInterceptor;
 
-	@Autowired
-	private Environment environment;
+    @Autowired
+    private Environment environment;
 
-	@Bean
-	public DozerMapperPlus dozerBeanMapper() {
-		DozerMapperPlus mapper = new DozerMapperPlus(getMappingFiles());
-		Map<String, CustomConverter> map = new HashMap<>();
-		map.put("booleanStringConverter", new BooleanStringConverter());
-		mapper.setCustomConvertersWithId(map);
-		return mapper;
-	}
+    @Bean
+    public DozerMapperPlus dozerBeanMapper() {
+        DozerMapperPlus mapper = new DozerMapperPlus(getMappingFiles());
+        Map<String, CustomConverter> map = new HashMap<>();
+        map.put("booleanStringConverter", new BooleanStringConverter());
+        mapper.setCustomConvertersWithId(map);
+        return mapper;
+    }
 
-	@Bean
-	public MultipartConfigElement multipartConfigElement() {
-		MultipartConfigFactory factory = new MultipartConfigFactory();
-		return factory.createMultipartConfig();
-	}
+    @Bean
+    public MultipartConfigElement multipartConfigElement() {
+        MultipartConfigFactory factory = new MultipartConfigFactory();
+        return factory.createMultipartConfig();
+    }
 
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 
-	@Bean
-	public ObjectMapper objectMapper() {
-		return new ObjectMapper();
-	}
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
+    }
 
-	@Bean
-	public Client smartyStreetsClient() {
-		String authId = environment.getProperty("smartystreets.auth.id");
-		String authToken = environment.getProperty("smartystreets.auth.token");
+    @Bean
+    public Client smartyStreetsClient() {
+        String authId = environment.getProperty("smartystreets.auth.id");
+        String authToken = environment.getProperty("smartystreets.auth.token");
 
-		if (StringUtils.isBlank(authId)) {
-			LOGGER.info("No SmartyStreets auth-id (smartystreets.auth.id) Provided.");
-		}
+        if (StringUtils.isBlank(authId)) {
+            LOGGER.info("No SmartyStreets auth-id (smartystreets.auth.id) Provided.");
+        }
 
-		if (StringUtils.isBlank(authToken)) {
-			LOGGER.info("No SmartyStreets auth-token (smartystreets.auth.token) Provided.");
-		}
+        if (StringUtils.isBlank(authToken)) {
+            LOGGER.info("No SmartyStreets auth-token (smartystreets.auth.token) Provided.");
+        }
 
-		return new ClientBuilder(authId, authToken).buildUsStreetApiClient();
-	}
+        return new ClientBuilder(authId, authToken).buildUsStreetApiClient();
+    }
 
-	@Bean
-	@ConditionalOnProperty(name="aws.s3.enabled", havingValue = "true")
-	public AmazonS3 amazonS3() {
-		return AmazonS3ClientBuilder.standard()
-				.withRegion(environment.getProperty("aws.s3.bucket.region"))
-				.withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
-				.build();
-	}
+    @Bean
+    @ConditionalOnProperty(name = "aws.s3.enabled", havingValue = "true")
+    public AmazonS3 amazonS3() {
+        return AmazonS3ClientBuilder.standard()
+                .withRegion(environment.getProperty("aws.s3.bucket.region"))
+                .withCredentials(DefaultAWSCredentialsProviderChain.getInstance())
+                .build();
+    }
 
-	@Bean
-	@ConditionalOnProperty(name="aws.s3.enabled", havingValue = "true")
-	public AmazonS3Service amazonS3Service(Environment environment, AmazonS3 amazonS3) {
-		return new AmazonS3ServiceImpl(environment, amazonS3);
-	}
+    @Bean
+    @ConditionalOnProperty(name = "aws.s3.enabled", havingValue = "true")
+    public AmazonS3Service amazonS3Service(Environment environment, AmazonS3 amazonS3) {
+        return new AmazonS3ServiceImpl(environment, amazonS3);
+    }
 
-	protected List<String> getMappingFiles() {
-		return Collections.emptyList();
-	}
+    protected List<String> getMappingFiles() {
+        return Collections.emptyList();
+    }
 
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(jsonHijackingInterceptor);
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(jsonHijackingInterceptor);
 
-		if(getInterceptors() != null) {
-			for(HandlerInterceptor i : getInterceptors()) {
-				registry.addInterceptor(i);
-			}
-		}
-	}
+        for (HandlerInterceptor i : getInterceptors()) {
+            registry.addInterceptor(i);
+        }
+    }
 
-	protected List<HandlerInterceptor> getInterceptors() {
-		return null;
-	}
+    protected List<HandlerInterceptor> getInterceptors() {
+        return new ArrayList<>();
+    }
 
 }
