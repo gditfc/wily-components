@@ -1,6 +1,7 @@
 package io.csra.wily.components.converter;
 
 import org.dozer.DozerBeanMapper;
+import org.dozer.MappingException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,23 @@ public class DozerMapperPlus extends DozerBeanMapper {
         }
 
         return destination;
+    }
+
+
+    public <T> T map(Object source, Class<T> destinationClass, String mapId) throws MappingException {
+        if (source == null) {
+            return null;
+        }
+
+        return this.getMappingProcessor().map(source, destinationClass, mapId);
+    }
+
+    public <T> T map(Object source, Class<T> destinationClass) throws MappingException {
+        if (source == null) {
+            return null;
+        }
+
+        return this.getMappingProcessor().map(source, destinationClass);
     }
 
 }
