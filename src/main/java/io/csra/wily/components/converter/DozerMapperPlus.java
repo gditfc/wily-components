@@ -1,7 +1,8 @@
 package io.csra.wily.components.converter;
 
-import org.dozer.DozerBeanMapper;
-import org.dozer.MappingException;
+import com.github.dozermapper.core.Mapper;
+import com.github.dozermapper.core.MappingException;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,15 +14,14 @@ import java.util.List;
  *
  * @author ndimola
  */
-public class DozerMapperPlus extends DozerBeanMapper {
+@Component
+public class DozerMapperPlus {
 
-	public DozerMapperPlus() {
-		super();
-	}
-	
-	public DozerMapperPlus(List<String> mappingFiles) {
-		super(mappingFiles);
-	}
+    private Mapper mapper;
+
+	public DozerMapperPlus(Mapper mapper) {
+	    this.mapper = mapper;
+    }
 
     /**
      * Map a list of objects of one type to a list of objects of another type. Uses an ArrayList as the
@@ -51,7 +51,7 @@ public class DozerMapperPlus extends DozerBeanMapper {
             return null;
         }
 
-        return this.getMappingProcessor().map(source, destinationClass, mapId);
+        return mapper.map(source, destinationClass, mapId);
     }
 
     public <T> T map(Object source, Class<T> destinationClass) throws MappingException {
@@ -59,7 +59,7 @@ public class DozerMapperPlus extends DozerBeanMapper {
             return null;
         }
 
-        return this.getMappingProcessor().map(source, destinationClass);
+        return mapper.map(source, destinationClass);
     }
 
 }

@@ -7,15 +7,15 @@ import javax.servlet.MultipartConfigElement;
 import com.amazonaws.auth.DefaultAWSCredentialsProviderChain;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.github.dozermapper.core.DozerBeanMapperBuilder;
+import com.github.dozermapper.core.Mapper;
 import com.smartystreets.api.ClientBuilder;
 import com.smartystreets.api.us_street.Client;
 import io.csra.wily.components.converter.BooleanStringConverter;
-import io.csra.wily.components.converter.DozerMapperPlus;
 import io.csra.wily.components.interceptor.JsonHijackingInterceptor;
 import io.csra.wily.components.service.AmazonS3Service;
 import io.csra.wily.components.service.impl.AmazonS3ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
-import org.dozer.CustomConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,12 +49,11 @@ public class MasterApplicationConfig implements WebMvcConfigurer {
     private Environment environment;
 
     @Bean
-    public DozerMapperPlus dozerBeanMapper() {
-        DozerMapperPlus mapper = new DozerMapperPlus(getMappingFiles());
-        Map<String, CustomConverter> map = new HashMap<>();
-        map.put("booleanStringConverter", new BooleanStringConverter());
-        mapper.setCustomConvertersWithId(map);
-        return mapper;
+    public Mapper dozerBeanMapper() {
+        return DozerBeanMapperBuilder.create()
+                .withMappingFiles(getMappingFiles())
+                .withCustomConverter(new BooleanStringConverter())
+                .build();
     }
 
     @Bean

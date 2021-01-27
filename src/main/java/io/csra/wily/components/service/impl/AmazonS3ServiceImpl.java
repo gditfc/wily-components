@@ -3,8 +3,8 @@ package io.csra.wily.components.service.impl;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.*;
-import com.google.common.io.ByteStreams;
 import io.csra.wily.components.service.AmazonS3Service;
+import org.apache.commons.io.IOUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,7 +29,7 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
         try {
             // Get an object and print its contents.
             fullObject = s3Client.getObject(new GetObjectRequest(environment.getRequiredProperty("aws.s3.bucket.name"), documentKey));
-            return ByteStreams.toByteArray(fullObject.getObjectContent());
+            return IOUtils.toByteArray(fullObject.getObjectContent());
         } catch (AmazonServiceException e) {
             // The call was transmitted successfully, but Amazon S3 couldn't process it, so it returned an error response.
             throw new IOException(e);

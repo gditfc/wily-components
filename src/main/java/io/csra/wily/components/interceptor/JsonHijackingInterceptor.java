@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
@@ -30,7 +31,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
  * http://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/mvc/method/annotation/ResponseBodyAdvice.html
  */
 @Component
-public class JsonHijackingInterceptor extends HandlerInterceptorAdapter {
+public class JsonHijackingInterceptor implements HandlerInterceptor {
 
     /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonHijackingInterceptor.class);
@@ -45,8 +46,13 @@ public class JsonHijackingInterceptor extends HandlerInterceptorAdapter {
     @Value(JSON_CONFIG_PROPERTY)
     private String jsonHijackingConfig;
 
-    /* (non-Javadoc)
-     * @see org.springframework.web.servlet.handler.HandlerInterceptorAdapter#preHandle(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object)
+    /**
+     *
+     * @param request Request
+     * @param response Response
+     * @param handler Handler
+     * @return true always
+     * @throws Exception exception
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -56,17 +62,17 @@ public class JsonHijackingInterceptor extends HandlerInterceptorAdapter {
             response.getOutputStream().write(getPrefix().getBytes());
         }
 
-        // Return true - the execution chain should proceed with the next intercepter.
+        // Return true - the execution chain should proceed with the next interceptor.
         return true;
     }
 
     /**
      *
-     * @param request
-     * @param response
-     * @param handler
-     * @param modelAndView
-     * @throws Exception
+     * @param request Request
+     * @param response Response
+     * @param handler Handler
+     * @param modelAndView ModelAndView
+     * @throws Exception exception
      */
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
@@ -79,7 +85,7 @@ public class JsonHijackingInterceptor extends HandlerInterceptorAdapter {
 
     /**
      *
-     * @return
+     * @return Prefix
      */
     private String getPrefix() {
         if(jsonHijackingConfig != null && jsonHijackingConfig.equalsIgnoreCase("angular")) {
@@ -91,7 +97,7 @@ public class JsonHijackingInterceptor extends HandlerInterceptorAdapter {
 
     /**
      *
-     * @return
+     * @return Postfix
      */
     private String getPostfix() {
         if(jsonHijackingConfig != null && (jsonHijackingConfig.equalsIgnoreCase("owasp") || JSON_CONFIG_PROPERTY.equalsIgnoreCase(jsonHijackingConfig))) {
