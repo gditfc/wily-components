@@ -77,9 +77,10 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
         if (multipartFile != null && multipartFile.getOriginalFilename() != null) {
             File convFile = new File(multipartFile.getOriginalFilename());
             convFile.createNewFile();
-            FileOutputStream fos = new FileOutputStream(convFile);
-            fos.write(multipartFile.getBytes());
-            fos.close();
+
+            try (final FileOutputStream fos = new FileOutputStream(convFile)) {
+                fos.write(multipartFile.getBytes());
+            }
 
             return convFile;
         }
