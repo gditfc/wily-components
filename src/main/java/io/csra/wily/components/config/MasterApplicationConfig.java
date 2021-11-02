@@ -12,6 +12,7 @@ import com.github.dozermapper.core.Mapper;
 import com.smartystreets.api.ClientBuilder;
 import com.smartystreets.api.us_street.Client;
 import io.csra.wily.components.converter.BooleanStringConverter;
+import io.csra.wily.components.converter.LocalDateTimeConverter;
 import io.csra.wily.components.interceptor.JsonHijackingInterceptor;
 import io.csra.wily.components.service.AmazonS3Service;
 import io.csra.wily.components.service.impl.AmazonS3ServiceImpl;
@@ -53,6 +54,7 @@ public class MasterApplicationConfig implements WebMvcConfigurer {
         return DozerBeanMapperBuilder.create()
                 .withMappingFiles(getMappingFiles())
                 .withCustomConverter(new BooleanStringConverter())
+                .withCustomConverter(new LocalDateTimeConverter())
                 .build();
     }
 
