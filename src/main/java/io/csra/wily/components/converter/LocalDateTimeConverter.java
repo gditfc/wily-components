@@ -51,9 +51,9 @@ public class LocalDateTimeConverter extends DateConverter implements CustomConve
 
     private Object fromInstant(final Instant instant, Class dest) {
         if (LocalDateTime.class.isAssignableFrom(dest)) {
-            return LocalDateTime.from(instant);
+            return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
         } else if (LocalDate.class.isAssignableFrom(dest)) {
-            return LocalDate.from(instant);
+            return LocalDate.ofInstant(instant, ZoneId.systemDefault());
         } else if (Timestamp.class.isAssignableFrom(dest)) {
             return Timestamp.from(instant);
         } else if (Date.class.isAssignableFrom(dest)) {
