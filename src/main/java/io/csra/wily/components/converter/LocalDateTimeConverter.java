@@ -7,10 +7,7 @@ import com.github.dozermapper.core.converters.DateConverter;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.util.Date;
 
 public class LocalDateTimeConverter extends DateConverter implements CustomConverter {
@@ -35,11 +32,24 @@ public class LocalDateTimeConverter extends DateConverter implements CustomConve
             return fromInstant(toInstant((LocalDateTime) srcObject), destClass);
         } else if (LocalDate.class.isAssignableFrom(srcObject.getClass())) {
             return fromInstant(toInstant((LocalDate) srcObject), destClass);
-        } else if (LocalDateTime.class.isAssignableFrom(destClass) || LocalDate.class.isAssignableFrom(destClass)) {
+        } else if (OffsetDateTime.class.isAssignableFrom(srcObject.getClass())) {
+            return fromInstant(((OffsetDateTime) srcObject).toInstant(), destClass, ((OffsetDateTime)srcObject).getOffset());
+        } else if (ZonedDateTime.class.isAssignableFrom(srcObject.getClass())) {
+            return fromInstant(((ZonedDateTime) srcObject).toInstant(), destClass, ((ZonedDateTime)srcObject).getZone());
+        } else if (isJavaTimeObject(destClass)) {
             return fromInstant(((Date) super.convert(Date.class, srcObject)).toInstant(), destClass);
         } else {
             return super.convert(destClass, srcObject);
         }
+    }
+
+    public static boolean isApplicable(Class destinationClass, Object source) {
+        return isJavaTimeObject(destinationClass) || (source != null && isJavaTimeObject(source.getClass()));
+    }
+
+    private static boolean isJavaTimeObject(Class clazz) {
+        return clazz != null && (LocalDateTime.class.isAssignableFrom(clazz) || LocalDate.class.isAssignableFrom(clazz)
+                || ZonedDateTime.class.isAssignableFrom(clazz) || OffsetDateTime.class.isAssignableFrom(clazz));
     }
 
     private Instant toInstant(final LocalDateTime ldt) {
@@ -49,11 +59,19 @@ public class LocalDateTimeConverter extends DateConverter implements CustomConve
         return ld.atStartOfDay(ZoneId.systemDefault()).toInstant();
     }
 
-    private Object fromInstant(final Instant instant, Class dest) {
+    private Object fromInstant(final Instant instant, final Class dest) {
+        return fromInstant(instant, dest, ZoneId.systemDefault());
+    }
+
+    private Object fromInstant(final Instant instant, final Class dest, final ZoneId zoneId) {
         if (LocalDateTime.class.isAssignableFrom(dest)) {
-            return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+            return LocalDateTime.ofInstant(instant, zoneId);
+        } else if (OffsetDateTime.class.isAssignableFrom(dest)) {
+            return OffsetDateTime.ofInstant(instant, zoneId);
+        } else if (ZonedDateTime.class.isAssignableFrom(dest)) {
+            return ZonedDateTime.ofInstant(instant, zoneId);
         } else if (LocalDate.class.isAssignableFrom(dest)) {
-            return LocalDate.ofInstant(instant, ZoneId.systemDefault());
+            return LocalDate.ofInstant(instant, zoneId);
         } else if (Timestamp.class.isAssignableFrom(dest)) {
             return Timestamp.from(instant);
         } else if (Date.class.isAssignableFrom(dest)) {
