@@ -5,7 +5,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
+import java.util.TreeMap;
 
 @Component("referenceService")
 public class ReferenceVariablesServiceImpl implements ReferenceVariablesService {
@@ -33,7 +36,7 @@ public class ReferenceVariablesServiceImpl implements ReferenceVariablesService 
     @Override
     public String getValue(String key, String refType) {
         String description = getReferences(refType).get(key);
-        if(StringUtils.isBlank(description)) {
+        if (StringUtils.isBlank(description)) {
             description = "Unknown";
         }
 
@@ -43,10 +46,10 @@ public class ReferenceVariablesServiceImpl implements ReferenceVariablesService 
     private Map<String, String> parseProperty(String referenceList, boolean ordered) {
         Map<String, String> references = initMap(ordered);
 
-        if(StringUtils.isNotBlank(referenceList)) {
+        if (StringUtils.isNotBlank(referenceList)) {
             if (referenceList.contains(pairDelimiter)) {
                 StringTokenizer tokenizer = new StringTokenizer(referenceList, pairDelimiter, false);
-                while(tokenizer.hasMoreTokens()) {
+                while (tokenizer.hasMoreTokens()) {
                     addReferencePair(tokenizer.nextToken(), references);
                 }
             } else {
@@ -58,7 +61,7 @@ public class ReferenceVariablesServiceImpl implements ReferenceVariablesService 
     }
 
     private Map<String, String> initMap(boolean ordered) {
-        if(ordered) {
+        if (ordered) {
             return new TreeMap<>();
         }
 
@@ -66,7 +69,7 @@ public class ReferenceVariablesServiceImpl implements ReferenceVariablesService 
     }
 
     private void addReferencePair(String referencePair, Map<String, String> references) {
-        if(referencePair.contains(keyValueDelimiter)) {
+        if (referencePair.contains(keyValueDelimiter)) {
             StringTokenizer tokenizer = new StringTokenizer(referencePair, keyValueDelimiter, false);
             references.put(tokenizer.nextToken(), tokenizer.nextToken());
         }

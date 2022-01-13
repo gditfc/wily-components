@@ -7,30 +7,30 @@
     <packaging>jar</packaging>
 
     <name>wily-components</name>
-	<description>Common Components and Configuration for the Wily Framework.</description>
-	<url>https://github.com/gditfc/wily-components</url>
+    <description>Common Components and Configuration for the Wily Framework.</description>
+    <url>https://github.com/gditfc/wily-components</url>
 
-	<licenses>
-		<license>
-		  <name>The Apache Software License, Version 2.0</name>
-		  <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-		</license>
-	</licenses>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
 
-	<developers>
-		<developer>
-		  <name>Nick DiMola</name>
-		  <email>nick.dimola@gdit.com</email>
-		  <organization>GDIT</organization>
-		  <organizationUrl>https://www.gdit.com</organizationUrl>
-		</developer>
-	</developers>
+    <developers>
+        <developer>
+            <name>Nick DiMola</name>
+            <email>nick.dimola@gdit.com</email>
+            <organization>GDIT</organization>
+            <organizationUrl>https://www.gdit.com</organizationUrl>
+        </developer>
+    </developers>
 
-	<scm>
-		<connection>scm:git:https://github.com/gditfc/wily-components.git</connection>
-		<developerConnection>scm:git:ssh://github.com:gditfc/wily-components.git</developerConnection>
-		<url>https://github.com/gditfc/wily-components/tree/master</url>
-	</scm>
+    <scm>
+        <connection>scm:git:https://github.com/gditfc/wily-components.git</connection>
+        <developerConnection>scm:git:ssh://github.com:gditfc/wily-components.git</developerConnection>
+        <url>https://github.com/gditfc/wily-components/tree/master</url>
+    </scm>
 
     <parent>
         <groupId>io.csra.wily</groupId>
@@ -159,14 +159,14 @@
         </plugins>
     </build>
 
-	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-	</distributionManagement>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 </project>

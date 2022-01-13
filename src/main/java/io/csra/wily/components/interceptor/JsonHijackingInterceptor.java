@@ -1,12 +1,5 @@
 package io.csra.wily.components.interceptor;
 
-import java.lang.reflect.Array;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,17 +7,22 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Array;
+import java.util.List;
+import java.util.Set;
 
 /**
  * The Class JsonHijackingInterceptor.
- *
+ * <p>
  * Extends HandlerInterceptorAdapter to prefix the response with an Angular prefix to mitigate the JSON hijacking vulnerability.
  * Handling controller responses for List, Set, and Arrays.
  *
  * @author Mike Ringrose
  * @author Nick DiMola
- *
+ * <p>
  * https://www.owasp.org/index.php/AJAX_Security_Cheat_Sheet#Always_return_JSON_with_an_Object_on_the_outside
  * https://docs.spring.io/spring/docs/current/spring-framework-reference/htmlsingle/#mvc-ann-controller-advice
  * http://blog.codeleak.pl/2013/11/controlleradvice-improvements-in-spring.html
@@ -33,10 +31,14 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 @Component
 public class JsonHijackingInterceptor implements HandlerInterceptor {
 
-    /** The Constant LOGGER. */
+    /**
+     * The Constant LOGGER.
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonHijackingInterceptor.class);
 
-    /** The Angular JSON prefix to apply to the response. */
+    /**
+     * The Angular JSON prefix to apply to the response.
+     */
     private static final String ANGULAR_JSON_PREFIX = ")]}',\n";
     private static final String OWASP_PREFIX = "{\"data\":";
     private static final String OWASP_POSTFIX = "}";
@@ -47,10 +49,9 @@ public class JsonHijackingInterceptor implements HandlerInterceptor {
     private String jsonHijackingConfig;
 
     /**
-     *
-     * @param request Request
+     * @param request  Request
      * @param response Response
-     * @param handler Handler
+     * @param handler  Handler
      * @return true always
      * @throws Exception exception
      */
@@ -67,10 +68,9 @@ public class JsonHijackingInterceptor implements HandlerInterceptor {
     }
 
     /**
-     *
-     * @param request Request
-     * @param response Response
-     * @param handler Handler
+     * @param request      Request
+     * @param response     Response
+     * @param handler      Handler
      * @param modelAndView ModelAndView
      * @throws Exception exception
      */
@@ -84,11 +84,10 @@ public class JsonHijackingInterceptor implements HandlerInterceptor {
     }
 
     /**
-     *
      * @return Prefix
      */
     private String getPrefix() {
-        if(jsonHijackingConfig != null && jsonHijackingConfig.equalsIgnoreCase("angular")) {
+        if (jsonHijackingConfig != null && jsonHijackingConfig.equalsIgnoreCase("angular")) {
             return ANGULAR_JSON_PREFIX;
         } else {
             return OWASP_PREFIX;
@@ -96,11 +95,10 @@ public class JsonHijackingInterceptor implements HandlerInterceptor {
     }
 
     /**
-     *
      * @return Postfix
      */
     private String getPostfix() {
-        if(jsonHijackingConfig != null && (jsonHijackingConfig.equalsIgnoreCase("owasp") || JSON_CONFIG_PROPERTY.equalsIgnoreCase(jsonHijackingConfig))) {
+        if (jsonHijackingConfig != null && (jsonHijackingConfig.equalsIgnoreCase("owasp") || JSON_CONFIG_PROPERTY.equalsIgnoreCase(jsonHijackingConfig))) {
             return OWASP_POSTFIX;
         }
 

@@ -21,8 +21,8 @@ public class DozerMapperPlus {
     private LocalDateTimeConverter customDateConverter;
     private static int JAVA_VERSION = getJavaVersion();
 
-	public DozerMapperPlus(Mapper mapper) {
-	    this.mapper = mapper;
+    public DozerMapperPlus(Mapper mapper) {
+        this.mapper = mapper;
         this.customDateConverter = new LocalDateTimeConverter();
     }
 
@@ -49,7 +49,7 @@ public class DozerMapperPlus {
     public <S, D> List<D> mapList(List<S> source, Class<D> clazz) {
         List<D> destination = new ArrayList<>();
 
-        if(source != null) {
+        if (source != null) {
             for (S s : source) {
                 destination.add(map(s, clazz));
             }
@@ -66,7 +66,7 @@ public class DozerMapperPlus {
 
         // this is necessary to handle conversions involving java.time objects for JSE16+
         if (JAVA_VERSION >= 16 && LocalDateTimeConverter.isApplicable(destinationClass, source)) {
-            return (T)customDateConverter.convert(destinationClass, source);
+            return (T) customDateConverter.convert(destinationClass, source);
         }
 
         return mapper.map(source, destinationClass, mapId);
@@ -79,7 +79,7 @@ public class DozerMapperPlus {
 
         // this is necessary to handle conversions involving java.time objects for JSE16+
         if (JAVA_VERSION >= 16 && LocalDateTimeConverter.isApplicable(destinationClass, source)) {
-            return (T)customDateConverter.convert(destinationClass, source);
+            return (T) customDateConverter.convert(destinationClass, source);
         }
 
         return mapper.map(source, destinationClass);

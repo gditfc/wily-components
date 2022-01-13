@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SmartyStreetsCodeMap {
-    
+
     private static final Map<String, String> SS_CODES = new HashMap<>();
-    
+
     public static Map<String, String> getCodes() {
-        if(SS_CODES.isEmpty()) {
+        if (SS_CODES.isEmpty()) {
             SS_CODES.put("AA", "City/state/ZIP + street are all valid.");
             SS_CODES.put("A1", "ZIP+4 not matched; address is invalid. (City/state/ZIP + street don't match.)");
             SS_CODES.put("BB", "ZIP+4 matched; confirmed entire address; address is valid.");

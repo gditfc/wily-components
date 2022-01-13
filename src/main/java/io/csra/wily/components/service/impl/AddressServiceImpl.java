@@ -1,7 +1,11 @@
 package io.csra.wily.components.service.impl;
 
 import com.smartystreets.api.exceptions.SmartyException;
-import com.smartystreets.api.us_street.*;
+import com.smartystreets.api.us_street.Batch;
+import com.smartystreets.api.us_street.Candidate;
+import com.smartystreets.api.us_street.Client;
+import com.smartystreets.api.us_street.Lookup;
+import com.smartystreets.api.us_street.MatchType;
 import io.csra.wily.components.model.AddressInputDTO;
 import io.csra.wily.components.model.AddressResultDTO;
 import io.csra.wily.components.model.CoordinatesDTO;
@@ -35,14 +39,14 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public List<AddressResultDTO> checkAddresses(List<AddressInputDTO> dtos) throws IOException, SmartyException {
         Batch batch = new Batch();
-        for(AddressInputDTO dto : dtos) {
+        for (AddressInputDTO dto : dtos) {
             batch.add(getLookupForInput(dto));
         }
 
         smartyStreetsClient.send(batch);
 
         List<AddressResultDTO> results = new ArrayList<>();
-        for(Lookup lookup : batch.getAllLookups()) {
+        for (Lookup lookup : batch.getAllLookups()) {
             AddressResultDTO result = getResultFromLookup(lookup);
             results.add(result);
         }
@@ -87,7 +91,7 @@ public class AddressServiceImpl implements AddressService {
     }
 
     private AddressResultDTO getResultFromLookup(Lookup lookup) {
-        if(lookup.getResult().isEmpty()) {
+        if (lookup.getResult().isEmpty()) {
             return null;
         }
 
@@ -120,7 +124,7 @@ public class AddressServiceImpl implements AddressService {
             footnotes.add(getDescriptionForCode(response.getAnalysis().getFootnotes()));
 
             String dpvFootnotes = response.getAnalysis().getDpvFootnotes();
-            if(StringUtils.isNotBlank(dpvFootnotes)) {
+            if (StringUtils.isNotBlank(dpvFootnotes)) {
                 // Split the string on every 2 characters - Regex suck
                 // https://stackoverflow.com/questions/2297347/splitting-a-string-at-every-n-th-character
                 for (String code : dpvFootnotes.split("(?<=\\G..)")) {

@@ -27,7 +27,7 @@ import static java.util.Collections.singletonMap;
  * 3. Add line 'release.version.enabled=false' to application.properties to disable this controller
  */
 @RestController
-@ConditionalOnProperty(value="release.version.enabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(value = "release.version.enabled", havingValue = "true", matchIfMissing = true)
 @RequestMapping("/api/public/release-version")
 public class ReleaseVersionController {
 

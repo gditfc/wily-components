@@ -7,7 +7,12 @@ import com.github.dozermapper.core.converters.DateConverter;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 public class LocalDateTimeConverter extends DateConverter implements CustomConverter {
@@ -33,9 +38,9 @@ public class LocalDateTimeConverter extends DateConverter implements CustomConve
         } else if (LocalDate.class.isAssignableFrom(srcObject.getClass())) {
             return fromInstant(toInstant((LocalDate) srcObject), destClass);
         } else if (OffsetDateTime.class.isAssignableFrom(srcObject.getClass())) {
-            return fromInstant(((OffsetDateTime) srcObject).toInstant(), destClass, ((OffsetDateTime)srcObject).getOffset());
+            return fromInstant(((OffsetDateTime) srcObject).toInstant(), destClass, ((OffsetDateTime) srcObject).getOffset());
         } else if (ZonedDateTime.class.isAssignableFrom(srcObject.getClass())) {
-            return fromInstant(((ZonedDateTime) srcObject).toInstant(), destClass, ((ZonedDateTime)srcObject).getZone());
+            return fromInstant(((ZonedDateTime) srcObject).toInstant(), destClass, ((ZonedDateTime) srcObject).getZone());
         } else if (isJavaTimeObject(destClass)) {
             return fromInstant(((Date) super.convert(Date.class, srcObject)).toInstant(), destClass);
         } else {
@@ -55,6 +60,7 @@ public class LocalDateTimeConverter extends DateConverter implements CustomConve
     private Instant toInstant(final LocalDateTime ldt) {
         return ldt.atZone(ZoneId.systemDefault()).toInstant();
     }
+
     private Instant toInstant(final LocalDate ld) {
         return ld.atStartOfDay(ZoneId.systemDefault()).toInstant();
     }
