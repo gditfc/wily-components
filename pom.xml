@@ -105,6 +105,16 @@
             <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-javadoc</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
