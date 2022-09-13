@@ -1,5 +1,6 @@
 package io.csra.wily.components.model;
 
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 public class AddressInputDTO {
@@ -28,13 +29,13 @@ public class AddressInputDTO {
     }
 
     public boolean isValidInput() {
-        if (StringUtils.isEmpty(street)) {
+        if (ObjectUtils.isEmpty(street)) {
             return false;
         }
 
-        if (StringUtils.isEmpty(zipcode)) {
-            if (StringUtils.isEmpty(city) || StringUtils.isEmpty(state)) {
-                if (StringUtils.isEmpty(lastline)) {
+        if (ObjectUtils.isEmpty(zipcode)) {
+            if (ObjectUtils.isEmpty(city) || ObjectUtils.isEmpty(state)) {
+                if (ObjectUtils.isEmpty(lastline)) {
                     return false;
                 }
             }
@@ -76,7 +77,7 @@ public class AddressInputDTO {
     }
 
     public String getCity() {
-        if (!StringUtils.isEmpty(lastline)) {
+        if (!ObjectUtils.isEmpty(lastline)) {
             return null;
         }
 
@@ -88,7 +89,7 @@ public class AddressInputDTO {
     }
 
     public String getState() {
-        if (!StringUtils.isEmpty(lastline)) {
+        if (!ObjectUtils.isEmpty(lastline)) {
             return null;
         }
 
@@ -100,7 +101,7 @@ public class AddressInputDTO {
     }
 
     public String getZipcode() {
-        if (!StringUtils.isEmpty(lastline)) {
+        if (!ObjectUtils.isEmpty(lastline)) {
             return null;
         }
 
