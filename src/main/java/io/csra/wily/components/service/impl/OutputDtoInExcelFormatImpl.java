@@ -39,11 +39,9 @@ public class OutputDtoInExcelFormatImpl implements OutputDtoInExcelFormat {
 
     @Override
     public <E> void write(List<E> dtos, Class<E> clazz, OutputStream out, String userName) throws IOException {
-        Workbook workbook = null;
-        try {
+        try (Workbook workbook = new HSSFWorkbook()){
             Field[] fields = FieldUtils.getAllFields(clazz);
 
-            workbook = new HSSFWorkbook();
             Sheet sheet = workbook.createSheet();
 
             writeHeader(sheet, fields);
@@ -51,16 +49,14 @@ public class OutputDtoInExcelFormatImpl implements OutputDtoInExcelFormat {
             writerRequestorInformation(sheet, lastRowWritten, userName);
 
             workbook.write(out);
-        } finally {
-            workbook.close();
         }
     }
 
     /**
      * Writes row 0 headers using the field names of the provided class.
      *
-     * @param sheet
-     * @param fields
+     * @param sheet - excel sheet
+     * @param fields - fields to write headers from
      */
     protected void writeHeader(Sheet sheet, Field[] fields) {
         Row headerRow = sheet.createRow(0);
@@ -79,13 +75,13 @@ public class OutputDtoInExcelFormatImpl implements OutputDtoInExcelFormat {
      * <p>
      * Assumes that the sheet should begin writing records at row 1, as row 0 is the header.
      *
-     * @param workbook
-     * @param sheet
-     * @param dtos
-     * @param fields
+     * @param workbook - excel workbook to be changed
+     * @param sheet - sheet to be changed
+     * @param dtos - dtos to be written as a row
+     * @param fields - associated fields
      */
     protected <E> int writeBody(Workbook workbook, Sheet sheet, List<E> dtos, Field[] fields) {
-        int cellNumber = 0;
+        int cellNumber;
         int rowNumber = 1;
 
         Map<Class<?>, CellStyle> cellStyles = createCellStyleWithDataFormat(workbook);
@@ -104,9 +100,9 @@ public class OutputDtoInExcelFormatImpl implements OutputDtoInExcelFormat {
     }
 
     /**
-     * @param sheet
-     * @param rowNumber
-     * @param userName
+     * @param sheet - excel sheet for requestor information
+     * @param rowNumber - row number in question
+     * @param userName - username of the requestor
      */
     protected void writerRequestorInformation(Sheet sheet, int rowNumber, String userName) {
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy 'at' hh:mm:ss a");
@@ -125,7 +121,7 @@ public class OutputDtoInExcelFormatImpl implements OutputDtoInExcelFormat {
      * @see org.apache.poi.ss.usermodel.BuiltinFormats BuiltinFormats
      */
     protected Map<Class<?>, CellStyle> createCellStyleWithDataFormat(Workbook workbook) {
-        Map<Class<?>, CellStyle> cellStylesMap = new HashMap<Class<?>, CellStyle>();
+        Map<Class<?>, CellStyle> cellStylesMap = new HashMap<>();
         DataFormat df = workbook.createDataFormat();
 
         CellStyle cs = workbook.createCellStyle();
@@ -139,10 +135,10 @@ public class OutputDtoInExcelFormatImpl implements OutputDtoInExcelFormat {
      * Provided a dto and field name, reflection will be performed to pull the value from the DTO and place it into the
      * provided cell. Additionally a style map can
      *
-     * @param dto
-     * @param field
-     * @param cell
-     * @param cellStylesMap
+     * @param dto - dto to pull the value from
+     * @param field - the field in the dto
+     * @param cell - the cell where the value is going to
+     * @param cellStylesMap - styles
      */
     private <E> void copyDtoValueToCell(E dto, Field field, Cell cell, Map<Class<?>, CellStyle> cellStylesMap) {
         try {
@@ -175,8 +171,8 @@ public class OutputDtoInExcelFormatImpl implements OutputDtoInExcelFormat {
      * letters and then capitalize each word from the split. DTOs passed into this class should have meaningful class member
      * names that way the header names actually make sense to an end user.
      *
-     * @param camelCaseFieldName
-     * @return
+     * @param camelCaseFieldName - field name to pull the header value from
+     * @return the human readable header value
      */
     private String getHumanReadableHeaderValue(String camelCaseFieldName) {
         String[] words = StringUtils.splitByCharacterTypeCamelCase(camelCaseFieldName);

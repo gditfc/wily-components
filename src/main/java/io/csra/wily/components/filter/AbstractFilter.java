@@ -26,11 +26,11 @@ public abstract class AbstractFilter implements Filter {
     /**
      * Your specific filter logic must be implemented with this method.
      *
-     * @param servletRequest
-     * @param servletResponse
-     * @param filterChain
-     * @throws IOException
-     * @throws ServletException
+     * @param servletRequest - servlet request
+     * @param servletResponse - servlet response
+     * @param filterChain - filter chain used
+     * @throws IOException - if i/o exception occurs
+     * @throws ServletException - if servlet exception occurs
      */
     protected abstract void doFilterImpl(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException;
 
@@ -39,7 +39,7 @@ public abstract class AbstractFilter implements Filter {
     }
 
     @Override
-    public void init(FilterConfig arg0) throws ServletException {
+    public void init(FilterConfig arg0) {
     }
 
 }

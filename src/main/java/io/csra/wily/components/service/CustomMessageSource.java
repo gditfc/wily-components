@@ -4,8 +4,8 @@ import org.springframework.context.MessageSource;
 
 public interface CustomMessageSource extends MessageSource {
 
-    public String getMessage(String msg);
+    String getMessage(String msg);
 
-    public String getMessage(String msg, String[] replacementValues);
+    String getMessage(String msg, String[] replacementValues);
 
 }

@@ -15,7 +15,7 @@ import java.util.Enumeration;
  * This servlet context listener handles forcibly destroying the JDBC driver, which can cause memory leaks and
  * unintended behavior in the application.
  * <p>
- * See: http://stackoverflow.com/questions/3320400/to-prevent-a-memory-leak-the-jdbc-driver-has-been-forcibly-unregistered/23912257#23912257
+ * See: <a href="http://stackoverflow.com/questions/3320400/to-prevent-a-memory-leak-the-jdbc-driver-has-been-forcibly-unregistered/23912257#23912257">...</a>
  *
  * @author ndimola
  */
@@ -26,9 +26,10 @@ public class CustomServletContextListener implements ServletContextListener {
 
     /**
      * See the following article for an explanation on why this needs to be here:
-     * http://stackoverflow.com/questions/3320400/to
+     * <a href="http://stackoverflow.com/questions/3320400/to">...</a>
      * -prevent-a-memory-leak-the-jdbc-driver-has-been-forcibly-unregistered/23912257#23912257
      */
+    @Override
     public final void contextDestroyed(ServletContextEvent sce) {
         // Deregister JDBC drivers in this context's ClassLoader:
         // Get the webapp's ClassLoader
@@ -52,6 +53,7 @@ public class CustomServletContextListener implements ServletContextListener {
         }
     }
 
+    @Override
     public void contextInitialized(ServletContextEvent sce) {
         // Do nothing
     }
