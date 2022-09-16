@@ -17,9 +17,9 @@ import java.util.List;
 @Component
 public class DozerMapperPlus {
 
-    private Mapper mapper;
-    private LocalDateTimeConverter customDateConverter;
-    private static int JAVA_VERSION = getJavaVersion();
+    private final Mapper mapper;
+    private final LocalDateTimeConverter customDateConverter;
+    private static final int JAVA_VERSION = getJavaVersion();
 
     public DozerMapperPlus(Mapper mapper) {
         this.mapper = mapper;
@@ -40,11 +40,11 @@ public class DozerMapperPlus {
      * Map a list of objects of one type to a list of objects of another type. Uses an ArrayList as the
      * list implementation under the hood.
      *
-     * @param source
-     * @param clazz
-     * @param <S>
-     * @param <D>
-     * @return
+     * @param source - source object list to be mapped
+     * @param clazz - type to be mapped to
+     * @param <S> - generic object type of source
+     * @param <D> - generic object type of class
+     * @return - List of the new typed objects
      */
     public <S, D> List<D> mapList(List<S> source, Class<D> clazz) {
         List<D> destination = new ArrayList<>();

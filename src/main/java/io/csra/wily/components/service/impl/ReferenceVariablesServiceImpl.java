@@ -13,9 +13,9 @@ import java.util.TreeMap;
 @Component("referenceService")
 public class ReferenceVariablesServiceImpl implements ReferenceVariablesService {
 
-    private String pairDelimiter;
-    private String keyValueDelimiter;
-    private Environment environment;
+    private final String pairDelimiter;
+    private final String keyValueDelimiter;
+    private final Environment environment;
 
     public ReferenceVariablesServiceImpl(Environment environment) {
         this.environment = environment;

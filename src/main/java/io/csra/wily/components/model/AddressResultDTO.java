@@ -32,22 +32,15 @@ public class AddressResultDTO {
     private List<String> matchNotes;
 
     public String getAddressTypeDescription() {
-        switch (addressType) {
-            case 'F':
-                return "Full Match";
-            case 'G':
-                return "General Delivery - Held for Pickup at the Post Office";
-            case 'H':
-                return "High-rise";
-            case 'P':
-                return "PO Box";
-            case 'R':
-                return "Rural Route or Highway Contract - May have Box Number Ranges";
-            case 'S':
-                return "Street";
-            default:
-                return "N/A";
-        }
+        return switch (addressType) {
+            case 'F' -> "Full Match";
+            case 'G' -> "General Delivery - Held for Pickup at the Post Office";
+            case 'H' -> "High-rise";
+            case 'P' -> "PO Box";
+            case 'R' -> "Rural Route or Highway Contract - May have Box Number Ranges";
+            case 'S' -> "Street";
+            default -> "N/A";
+        };
     }
 
     public String getInputId() {

@@ -10,9 +10,11 @@ import java.util.List;
 
 public interface AddressService {
 
-    AddressResultDTO checkAddress(AddressInputDTO dto) throws IOException, SmartyException;
+    AddressResultDTO checkAddress(AddressInputDTO dto)
+            throws IOException, InterruptedException, SmartyException;
 
-    List<AddressResultDTO> checkAddresses(List<AddressInputDTO> dtos) throws IOException, SmartyException;
+    List<AddressResultDTO> checkAddresses(List<AddressInputDTO> dtos)
+            throws IOException, InterruptedException, SmartyException;
 
     double distanceBetween(CoordinatesDTO coordinates1, CoordinatesDTO coordinates2);
 

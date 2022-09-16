@@ -19,9 +19,11 @@ import java.io.IOException;
 
 public class AmazonS3ServiceImpl implements AmazonS3Service {
 
-    private Environment environment;
+    private final Environment environment;
 
-    private AmazonS3 s3Client;
+    private final AmazonS3 s3Client;
+
+    private static final String AWS_S3_BUCKET_NAME_KEY = "aws.s3.bucket.name";
 
     public AmazonS3ServiceImpl(Environment environment, AmazonS3 s3Client) {
         this.environment = environment;
@@ -30,20 +32,14 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
 
     @Override
     public byte[] getDocumentFromS3(String documentKey) throws IOException {
-        S3Object fullObject = null;
-        try {
+        try (S3Object fullObject = s3Client.getObject(new GetObjectRequest(environment.getRequiredProperty(AWS_S3_BUCKET_NAME_KEY), documentKey))) {
             // Get an object and print its contents.
-            fullObject = s3Client.getObject(new GetObjectRequest(environment.getRequiredProperty("aws.s3.bucket.name"), documentKey));
             return IOUtils.toByteArray(fullObject.getObjectContent());
         } catch (AmazonServiceException e) {
             // The call was transmitted successfully, but Amazon S3 couldn't process it, so it returned an error response.
             throw new IOException(e);
-        } finally {
-            // To ensure that the network connection doesn't remain open, close any open input streams.
-            if (fullObject != null) {
-                fullObject.close();
-            }
         }
+        // To ensure that the network connection doesn't remain open, close any open input streams.
     }
 
     @Override
@@ -52,7 +48,7 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
         try {
             // Upload a file as a new object with ContentType and title specified.
             localFile = toFile(file);
-            PutObjectRequest request = new PutObjectRequest(environment.getRequiredProperty("aws.s3.bucket.name"), documentKey, localFile);
+            PutObjectRequest request = new PutObjectRequest(environment.getRequiredProperty(AWS_S3_BUCKET_NAME_KEY), documentKey, localFile);
             ObjectMetadata metadata = new ObjectMetadata();
             metadata.setContentType(file.getContentType());
             request.setMetadata(metadata);
@@ -74,7 +70,7 @@ public class AmazonS3ServiceImpl implements AmazonS3Service {
 
     @Override
     public void deleteDocumentFromS3(String documentKey) {
-        s3Client.deleteObject(new DeleteObjectRequest(environment.getRequiredProperty("aws.s3.bucket.name"), documentKey));
+        s3Client.deleteObject(new DeleteObjectRequest(environment.getRequiredProperty(AWS_S3_BUCKET_NAME_KEY), documentKey));
     }
 
 

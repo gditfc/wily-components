@@ -1,6 +1,6 @@
 package io.csra.wily.components.model;
 
-import org.springframework.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 public class AddressInputDTO {
 
